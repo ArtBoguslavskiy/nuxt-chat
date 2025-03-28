@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import useChatScroll from "~/composables/useChatScroll";
+
 const { chat, messages, sendMessage } = useChat();
+const { showScrollButton, scrollToBottom, pinToBottom } = useChatScroll();
 
 function handleSendMessage(message: string) {
   sendMessage(message);
 }
+
+watch(() => messages.value, pinToBottom, { deep: true });
 </script>
 
 <template>
@@ -15,10 +20,11 @@ function handleSendMessage(message: string) {
           <ChatInput @send-message="handleSendMessage" />
         </div>
       </div>
-      <div v-else class="chat-header">
-        <h1 class="title">{{ chat?.title || "Untitled Chat" }}</h1>
-      </div>
-      <div class="message-form-container">
+
+      <div v-else>
+        <div class="chat-header">
+          <h1 class="title">{{ chat?.title || "Untitled Chat" }}</h1>
+        </div>
         <div class="messages-container">
           <div
             v-for="message in messages"
@@ -28,10 +34,24 @@ function handleSendMessage(message: string) {
               'message-user': message.role === 'user',
               'message-ai': message.role === 'assistant',
             }">
-            <div class="message-content">{{ message.content }}</div>
+            <div class="message-content">
+              {{ message.content }}
+            </div>
           </div>
         </div>
-        <ChatInput @send-message="handleSendMessage" />
+
+        <div class="message-form-container">
+          <div class="scroll-to-bottom-button-container">
+            <UButton
+              v-if="showScrollButton"
+              color="neutral"
+              variant="outline"
+              icon="i-heroicons-arrow-down"
+              class="rounded-full shadow-sm"
+              @click="() => scrollToBottom()" />
+          </div>
+          <ChatInput @send-message="handleSendMessage" />
+        </div>
       </div>
     </UContainer>
   </div>
