@@ -6,5 +6,20 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxt/ui", "@nuxt/eslint"],
+  modules: ["@nuxt/ui", "@nuxt/eslint", "@nuxtjs/mdc"],
+  runtimeConfig: {
+    openaiApiKey: "Hello",
+    public: {
+      someValue: "on the frontend!",
+    },
+  },
+  mdc: {
+    highlight: {
+      theme: {
+        default: "solarized-light",
+        dark: "solarized-dark",
+      },
+      langs: ["html", "javascript", "typescript", "vue", "markdown"],
+    },
+  },
 });
